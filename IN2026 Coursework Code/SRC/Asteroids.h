@@ -54,6 +54,8 @@ private:
 	// Start Screen Label
 	shared_ptr<GUILabel> mStartLabel;
 	shared_ptr<GUILabel> mGameOverLabel;
+	shared_ptr<GUILabel> mHighScoreLabel;
+	shared_ptr<GUILabel> mHighScoreNumLabel;
 
 	uint mLevel;
 	uint mAsteroidCount;

@@ -97,9 +97,15 @@ void Asteroids::OnKeyPressed(uchar key, int x, int y)
 		case ' ':
 			// Create a spaceship and add it to the world
 			mGameWorld->AddObject(CreateSpaceship());
+			// Sets Score to 0
+			mScoreKeeper.mScore = 0;
+			// Sets Lives to 3
+			mPlayer.mLives = 3;
 
 			mGameStarted = true;
 			mStartLabel->SetVisible(false);
+			mHighScoreLabel->SetVisible(false);
+			mHighScoreNumLabel->SetVisible(false);
 			break;
 		default:
 			break;
@@ -120,32 +126,39 @@ void Asteroids::OnKeyReleased(uchar key, int x, int y) {}
 
 void Asteroids::OnSpecialKeyPressed(int key, int x, int y)
 {
-	switch (key)
+	if (mGameStarted)
 	{
-	// If up arrow key is pressed start applying forward thrust
-	case GLUT_KEY_UP: mSpaceship->Thrust(20); break;
-	// If left arrow key is pressed start rotating anti-clockwise
-	case GLUT_KEY_LEFT: mSpaceship->Rotate(180); break;
-	// If right arrow key is pressed start rotating clockwise
-	case GLUT_KEY_RIGHT: mSpaceship->Rotate(-180); break;
-	// Default case - do nothing
-	default: break;
+		switch (key)
+		{
+			// If up arrow key is pressed start applying forward thrust
+		case GLUT_KEY_UP: mSpaceship->Thrust(20); break;
+			// If left arrow key is pressed start rotating anti-clockwise
+		case GLUT_KEY_LEFT: mSpaceship->Rotate(180); break;
+			// If right arrow key is pressed start rotating clockwise
+		case GLUT_KEY_RIGHT: mSpaceship->Rotate(-180); break;
+			// Default case - do nothing
+		default: break;
+		}
 	}
 }
 
 void Asteroids::OnSpecialKeyReleased(int key, int x, int y)
 {
-	switch (key)
+	if (mGameStarted)
 	{
-	// If up arrow key is released stop applying forward thrust
-	case GLUT_KEY_UP: mSpaceship->Thrust(0); break;
-	// If left arrow key is released stop rotating
-	case GLUT_KEY_LEFT: mSpaceship->Rotate(0); break;
-	// If right arrow key is released stop rotating
-	case GLUT_KEY_RIGHT: mSpaceship->Rotate(0); break;
-	// Default case - do nothing
-	default: break;
-	} 
+		// Breaks game as when on start screen if there is no spaceship and up, left or right is pressed the game crashes
+		switch (key)
+		{
+			// If up arrow key is released stop applying forward thrust
+		case GLUT_KEY_UP: mSpaceship->Thrust(0); break;
+			// If left arrow key is released stop rotating
+		case GLUT_KEY_LEFT: mSpaceship->Rotate(0); break;
+			// If right arrow key is released stop rotating
+		case GLUT_KEY_RIGHT: mSpaceship->Rotate(0); break;
+			// Default case - do nothing
+		default: break;
+		}
+	}
 }
 
 
@@ -187,6 +200,20 @@ void Asteroids::OnTimer(int value)
 	if (value == SHOW_GAME_OVER)
 	{
 		mGameOverLabel->SetVisible(true);
+		// Loops back to start screen
+		SetTimer(3000, SHOW_GAME_START);
+	}
+
+	// Start screen after game over screen
+	if (value == SHOW_GAME_START)
+	{
+		mGameOverLabel->SetVisible(false);
+		mLivesLabel->SetVisible(false);
+		mScoreLabel->SetVisible(false);
+		mScoreKeeper.mScore = 0;
+		mLevel = 0;
+		CreateGUI();
+		mGameStarted = false;
 	}
 
 }
@@ -252,7 +279,7 @@ void Asteroids::CreateGUI()
 
 
 	// Create Start Screen Label
-	mStartLabel = make_shared<GUILabel>("Press 'space' To Start");
+	mStartLabel = make_shared<GUILabel>("Press Space To Start");
 	// Set vertical alignment of the label to GUI_VALIGN_MIDDLE
 	mStartLabel->SetVerticalAlignment(GUIComponent::GUI_VALIGN_MIDDLE);
 	// Set horizontal alignment of the label to GUI_VALIGN_CENTER
@@ -260,6 +287,32 @@ void Asteroids::CreateGUI()
 	// Add the GUILabel to the GUIComponent
 	shared_ptr<GUIComponent> start_component = static_pointer_cast<GUIComponent>(mStartLabel);
 	mGameDisplay->GetContainer()->AddComponent(start_component, GLVector2f(0.5f, 0.7f));
+
+
+	//HighScore Label
+	mHighScoreLabel = make_shared<GUILabel>("Highest Score: ");
+
+	mHighScoreLabel->SetHorizontalAlignment(GUIComponent::GUI_HALIGN_CENTER);
+
+	mHighScoreLabel->SetVerticalAlignment(GUIComponent::GUI_VALIGN_MIDDLE);
+
+	shared_ptr<GUIComponent> highScore_component = static_pointer_cast<GUIComponent>(mHighScoreLabel);
+	mGameDisplay->GetContainer()->AddComponent(highScore_component, GLVector2f(0.5f, 0.4f));
+
+	ifstream highScore("HighScore.txt");
+	string highscore;
+	highScore >> highscore;
+
+	//HighScoreNum Label
+	mHighScoreNumLabel = make_shared<GUILabel>(highscore);
+
+	mHighScoreNumLabel->SetHorizontalAlignment(GUIComponent::GUI_HALIGN_CENTER);
+
+	mHighScoreNumLabel->SetVerticalAlignment(GUIComponent::GUI_VALIGN_MIDDLE);
+
+	shared_ptr<GUIComponent> highScoreNum_component = static_pointer_cast<GUIComponent>(mHighScoreNumLabel);
+	mGameDisplay->GetContainer()->AddComponent(highScoreNum_component, GLVector2f(0.5f, 0.35));
+
 
 
 	// Create a new GUILabel and wrap it up in a shared_ptr
@@ -300,7 +353,7 @@ void Asteroids::OnPlayerKilled(int lives_left)
 	// Get the lives left message as a string
 	std::string lives_msg = msg_stream.str();
 	mLivesLabel->SetText(lives_msg);
-
+	2
 	if (lives_left > 0) 
 	{ 
 		SetTimer(1000, CREATE_NEW_PLAYER); 
@@ -308,6 +361,11 @@ void Asteroids::OnPlayerKilled(int lives_left)
 	else
 	{
 		SetTimer(500, SHOW_GAME_OVER);
+		// Saves score to text file
+		ofstream highScore;
+		highScore.open("HighScore.txt");
+		highScore << mScoreKeeper.mScore;
+		highScore.close();
 	}
 }
 
