@@ -20,6 +20,8 @@ Asteroids::Asteroids(int argc, char *argv[])
 {
 	mLevel = 0;
 	mAsteroidCount = 0;
+	// Enables Start Screen
+	mGameStarted = false;
 }
 
 /** Destructor. */
@@ -59,9 +61,9 @@ void Asteroids::Start()
 	Animation *spaceship_anim = AnimationManager::GetInstance().CreateAnimationFromFile("spaceship", 128, 128, 128, 128, "spaceship_fs.png");
 
 	// Create a spaceship and add it to the world
-	mGameWorld->AddObject(CreateSpaceship());
+	// mGameWorld->AddObject(CreateSpaceship());
 	// Create some asteroids and add them to the world
-	CreateAsteroids(10);
+	   CreateAsteroids(6);
 
 	//Create the GUI
 	CreateGUI();
@@ -87,6 +89,23 @@ void Asteroids::Stop()
 
 void Asteroids::OnKeyPressed(uchar key, int x, int y)
 {
+
+	if (!mGameStarted)
+	{
+		switch (key)
+		{
+		case ' ':
+			// Create a spaceship and add it to the world
+			mGameWorld->AddObject(CreateSpaceship());
+
+			mGameStarted = true;
+			mStartLabel->SetVisible(false);
+			break;
+		default:
+			break;
+		}
+	}
+
 	switch (key)
 	{
 	case ' ':
@@ -104,11 +123,11 @@ void Asteroids::OnSpecialKeyPressed(int key, int x, int y)
 	switch (key)
 	{
 	// If up arrow key is pressed start applying forward thrust
-	case GLUT_KEY_UP: mSpaceship->Thrust(10); break;
+	case GLUT_KEY_UP: mSpaceship->Thrust(20); break;
 	// If left arrow key is pressed start rotating anti-clockwise
-	case GLUT_KEY_LEFT: mSpaceship->Rotate(90); break;
+	case GLUT_KEY_LEFT: mSpaceship->Rotate(180); break;
 	// If right arrow key is pressed start rotating clockwise
-	case GLUT_KEY_RIGHT: mSpaceship->Rotate(-90); break;
+	case GLUT_KEY_RIGHT: mSpaceship->Rotate(-180); break;
 	// Default case - do nothing
 	default: break;
 	}
@@ -230,6 +249,18 @@ void Asteroids::CreateGUI()
 	// Add the GUILabel to the GUIComponent  
 	shared_ptr<GUIComponent> lives_component = static_pointer_cast<GUIComponent>(mLivesLabel);
 	mGameDisplay->GetContainer()->AddComponent(lives_component, GLVector2f(0.0f, 0.0f));
+
+
+	// Create Start Screen Label
+	mStartLabel = make_shared<GUILabel>("Press 'space' To Start");
+	// Set vertical alignment of the label to GUI_VALIGN_MIDDLE
+	mStartLabel->SetVerticalAlignment(GUIComponent::GUI_VALIGN_MIDDLE);
+	// Set horizontal alignment of the label to GUI_VALIGN_CENTER
+	mStartLabel->SetHorizontalAlignment(GUIComponent::GUI_HALIGN_CENTER);
+	// Add the GUILabel to the GUIComponent
+	shared_ptr<GUIComponent> start_component = static_pointer_cast<GUIComponent>(mStartLabel);
+	mGameDisplay->GetContainer()->AddComponent(start_component, GLVector2f(0.5f, 0.7f));
+
 
 	// Create a new GUILabel and wrap it up in a shared_ptr
 	mGameOverLabel = shared_ptr<GUILabel>(new GUILabel("GAME OVER"));
