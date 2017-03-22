@@ -13,6 +13,8 @@
 class GameObject;
 class Spaceship;
 class GUILabel;
+//RYAN AND ALEX
+class PowerUp;
 
 class Asteroids : public GameSession, public IKeyboardListener, public IGameWorldListener, public IScoreListener, public IPlayerListener
 {
@@ -49,6 +51,8 @@ public:
 
 private:
 	shared_ptr<Spaceship> mSpaceship;
+	// RYAN AND ALEX
+	shared_ptr<PowerUp> mPowerUp;
 	shared_ptr<GUILabel> mScoreLabel;
 	shared_ptr<GUILabel> mLivesLabel;
 	// Start Screen Label
@@ -63,6 +67,7 @@ private:
 	void ResetSpaceship();
 	shared_ptr<GameObject> CreateSpaceship();
 	void CreateGUI();
+	void CreatePowerUp(const uint num_powerUp);
 	void CreateAsteroids(const uint num_asteroids);
 	shared_ptr<GameObject> CreateExplosion();
 	
@@ -71,6 +76,7 @@ private:
 	const static uint CREATE_NEW_PLAYER = 2;
 
 	const static uint SHOW_GAME_START = 3;
+	const static uint CREATE_POWERUP = 4;
 	ScoreKeeper mScoreKeeper;
 	Player mPlayer;
 	bool mGameStarted;

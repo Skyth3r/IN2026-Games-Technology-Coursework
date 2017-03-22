@@ -16,13 +16,25 @@ public:
 
 	void OnWorldUpdated(GameWorld* world) {}
 
-	void OnObjectAdded(GameWorld* world, shared_ptr<GameObject> object) {}
+	void OnObjectAdded(GameWorld* world, shared_ptr<GameObject> object) {
+	}
 
 	void OnObjectRemoved(GameWorld* world, shared_ptr<GameObject> object)
 	{
+		// Asteroid collides with Spaceship then a life is lost
 		if (object->GetType() == GameObjectType("Spaceship")) {
 			mLives -= 1;
 			FirePlayerKilled();
+		} 
+	}
+
+	//POWERUP
+	void OnObjectRemoved(GameWorld* world, shared_ptr<PowerUp> object)
+	{
+		// PowerUp collides with Spaceship then a life is gained
+		if (object->GetType() == GameObjectType("Spaceship")) {
+			mLives += 1;
+			//FirePlayerKilled();
 		}
 	}
 

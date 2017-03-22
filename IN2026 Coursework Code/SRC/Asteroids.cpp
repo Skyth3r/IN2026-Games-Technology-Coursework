@@ -11,6 +11,7 @@
 #include "BoundingSphere.h"
 #include "GUILabel.h"
 #include "Explosion.h"
+#include "PowerUp.h"
 
 // PUBLIC INSTANCE CONSTRUCTORS ///////////////////////////////////////////////
 
@@ -63,7 +64,10 @@ void Asteroids::Start()
 	// Create a spaceship and add it to the world
 	// mGameWorld->AddObject(CreateSpaceship());
 	// Create some asteroids and add them to the world
-	   CreateAsteroids(6);
+	CreateAsteroids(6);
+
+	// Creates a PowerUp and adds it to the world
+	CreatePowerUp(1);
 
 	//Create the GUI
 	CreateGUI();
@@ -131,13 +135,15 @@ void Asteroids::OnSpecialKeyPressed(int key, int x, int y)
 		switch (key)
 		{
 			// If up arrow key is pressed start applying forward thrust
-		case GLUT_KEY_UP: mSpaceship->Thrust(20); break;
+			case GLUT_KEY_UP: mSpaceship->Thrust(20); break;
+			// If down arrow key is pressed start applying forward thrust
+			case GLUT_KEY_DOWN: mSpaceship->Thrust(-20); break;
 			// If left arrow key is pressed start rotating anti-clockwise
-		case GLUT_KEY_LEFT: mSpaceship->Rotate(180); break;
+			case GLUT_KEY_LEFT: mSpaceship->Rotate(180); break;
 			// If right arrow key is pressed start rotating clockwise
-		case GLUT_KEY_RIGHT: mSpaceship->Rotate(-180); break;
+			case GLUT_KEY_RIGHT: mSpaceship->Rotate(-180); break;
 			// Default case - do nothing
-		default: break;
+			default: break;
 		}
 	}
 }
@@ -150,13 +156,15 @@ void Asteroids::OnSpecialKeyReleased(int key, int x, int y)
 		switch (key)
 		{
 			// If up arrow key is released stop applying forward thrust
-		case GLUT_KEY_UP: mSpaceship->Thrust(0); break;
+			case GLUT_KEY_UP: mSpaceship->Thrust(0); break;
+			// If down arrow key is pressed start applying forward thrust
+			case GLUT_KEY_DOWN: mSpaceship->Thrust(0); break;
 			// If left arrow key is released stop rotating
-		case GLUT_KEY_LEFT: mSpaceship->Rotate(0); break;
+			case GLUT_KEY_LEFT: mSpaceship->Rotate(0); break;
 			// If right arrow key is released stop rotating
-		case GLUT_KEY_RIGHT: mSpaceship->Rotate(0); break;
+			case GLUT_KEY_RIGHT: mSpaceship->Rotate(0); break;
 			// Default case - do nothing
-		default: break;
+			default: break;
 		}
 	}
 }
@@ -178,6 +186,11 @@ void Asteroids::OnObjectRemoved(GameWorld* world, shared_ptr<GameObject> object)
 			SetTimer(500, START_NEXT_LEVEL); 
 		}
 	}
+
+	if (object->GetType() == GameObjectType("PowerUp"))
+	{
+		SetTimer(3000, CREATE_POWERUP);
+	}
 }
 
 // PUBLIC INSTANCE METHODS IMPLEMENTING ITimerListener ////////////////////////
@@ -193,7 +206,7 @@ void Asteroids::OnTimer(int value)
 	if (value == START_NEXT_LEVEL)
 	{
 		mLevel++;
-		int num_asteroids = 10 + 2 * mLevel;
+		int num_asteroids = 8 + 2 * mLevel;
 		CreateAsteroids(num_asteroids);
 	}
 
@@ -214,6 +227,12 @@ void Asteroids::OnTimer(int value)
 		mLevel = 0;
 		CreateGUI();
 		mGameStarted = false;
+	}
+	
+	// Adds another PowerUp to the game
+	if (value == CREATE_POWERUP)
+	{
+		CreatePowerUp(1);
 	}
 
 }
@@ -254,6 +273,13 @@ void Asteroids::CreateAsteroids(const uint num_asteroids)
 		asteroid->SetScale(0.2f);
 		mGameWorld->AddObject(asteroid);
 	}
+}
+
+void Asteroids::CreatePowerUp(const uint num_powerUp)
+{
+	mPowerUp = make_shared<PowerUp>();
+	mPowerUp->SetBoundingShape(make_shared<BoundingSphere>(mPowerUp->GetThisPtr(), 10.0f));
+	mGameWorld->AddObject(mPowerUp);
 }
 
 void Asteroids::CreateGUI()
@@ -353,7 +379,6 @@ void Asteroids::OnPlayerKilled(int lives_left)
 	// Get the lives left message as a string
 	std::string lives_msg = msg_stream.str();
 	mLivesLabel->SetText(lives_msg);
-	2
 	if (lives_left > 0) 
 	{ 
 		SetTimer(1000, CREATE_NEW_PLAYER); 
