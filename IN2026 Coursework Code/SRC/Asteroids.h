@@ -13,7 +13,6 @@
 class GameObject;
 class Spaceship;
 class GUILabel;
-//RYAN AND ALEX
 class PowerUp;
 
 class Asteroids : public GameSession, public IKeyboardListener, public IGameWorldListener, public IScoreListener, public IPlayerListener
@@ -51,7 +50,7 @@ public:
 
 private:
 	shared_ptr<Spaceship> mSpaceship;
-	// RYAN AND ALEX
+
 	shared_ptr<PowerUp> mPowerUp;
 	shared_ptr<GUILabel> mScoreLabel;
 	shared_ptr<GUILabel> mLivesLabel;
