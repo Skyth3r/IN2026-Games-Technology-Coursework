@@ -10,7 +10,7 @@ public:
 	~PowerUp(void);
 	void Render(void);
 
-	bool CollisionTest(shared_ptr<PowerUp> o);
+	bool CollisionTest(shared_ptr<GameObject> o);
 	void OnCollision(const GameObjectList& objects);
 };
 

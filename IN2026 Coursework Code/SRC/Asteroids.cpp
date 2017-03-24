@@ -189,6 +189,17 @@ void Asteroids::OnObjectRemoved(GameWorld* world, shared_ptr<GameObject> object)
 
 	if (object->GetType() == GameObjectType("PowerUp"))
 	{
+		mPlayer.mLives ++;
+		cout << "You gained a life \n";
+
+		// Needed to get Lives Label to update
+		// Format the lives left message using an string-based stream
+		std::ostringstream msg_stream;
+		msg_stream << "Lives: " << mPlayer.mLives;
+		// Get the lives left message as a string
+		std::string lives_msg = msg_stream.str();
+		mLivesLabel->SetText(lives_msg);
+
 		SetTimer(3000, CREATE_POWERUP);
 	}
 }
@@ -232,6 +243,7 @@ void Asteroids::OnTimer(int value)
 	// Adds another PowerUp to the game
 	if (value == CREATE_POWERUP)
 	{
+		//mPlayer.mLives--;
 		CreatePowerUp(1);
 	}
 
@@ -405,7 +417,3 @@ shared_ptr<GameObject> Asteroids::CreateExplosion()
 	explosion->Reset();
 	return explosion;
 }
-
-
-
-

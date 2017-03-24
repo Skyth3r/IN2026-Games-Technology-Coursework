@@ -44,7 +44,7 @@ void PowerUp::Render(void)
 	glEnable(GL_LIGHTING);
 }
 
-bool PowerUp::CollisionTest(shared_ptr<PowerUp> o)
+bool PowerUp::CollisionTest(shared_ptr<GameObject> o)
 {
 	if (GetType() == GameObjectType("Asteroid") || GetType() == GameObjectType("Bullet")) return false;
 	if (GetType() == o->GetType()) return false;

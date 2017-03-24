@@ -44,6 +44,7 @@ public:
 	void OnWorldUpdated(GameWorld* world) {}
 	void OnObjectAdded(GameWorld* world, shared_ptr<GameObject> object) {}
 	void OnObjectRemoved(GameWorld* world, shared_ptr<GameObject> object);
+	// void OnObjectRemoved(GameWorld* world, shared_ptr<PowerUp> object);
 
 	// Override the default implementation of ITimerListener ////////////////////
 	void OnTimer(int value);

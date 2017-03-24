@@ -7,7 +7,6 @@
 #include "GameObjectType.h"
 #include "IPlayerListener.h"
 #include "IGameWorldListener.h"
-// Added this
 #include "PowerUp.h"
 
 class Player : public IGameWorldListener
@@ -30,15 +29,15 @@ public:
 		} 
 	}
 
-	// POWERUP
-	void OnObjectRemoved(GameWorld* world, shared_ptr<PowerUp> object)
-	{
+	//POWERUP
+	//void OnObjectRemoved(GameWorld* world, shared_ptr<PowerUp> object)
+	//{
 		// PowerUp collides with Spaceship then a life is gained
-		if (object->GetType() == GameObjectType("Spaceship")) {
-			mLives =+ 1;
+		//if (object->GetType() == GameObjectType("Spaceship")) {
+			//mLives =+ 1;
 			//FirePlayerKilled();
-		}
-	}
+		//}
+	//}
 
 	void AddListener(shared_ptr<IPlayerListener> listener)
 	{
