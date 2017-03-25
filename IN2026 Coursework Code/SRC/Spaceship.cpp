@@ -9,9 +9,9 @@ using namespace std;
 // PUBLIC INSTANCE CONSTRUCTORS ///////////////////////////////////////////////
 
 /**  Default constructor. */
-Spaceship::Spaceship()
-	: GameObject("Spaceship"), mThrust(0)
+Spaceship::Spaceship(): GameObject("Spaceship"), mThrust(0)
 {
+	mShieldOn = true;
 }
 
 /** Construct a spaceship with given position, velocity, acceleration, angle, and rotation. */
@@ -51,6 +51,28 @@ void Spaceship::Render(void)
 	}
 
 	GameObject::Render();
+
+	if (mShieldOn)
+	{
+		glScalef(7, 6, 8);
+		// Disable lighting for solid colour lines
+		glDisable(GL_LIGHTING);
+		// Start drawing lines
+		glBegin(GL_LINE_LOOP);
+		// Add vertices to draw an octagon
+		glVertex3f(-7, -7, 0.0);
+		glVertex3f(-10, 0, 0.0);
+		glVertex3f(-7, 7, 0.0);
+		glVertex3f(0, 10, 0.0);
+		glVertex3f(7, 7, 0.0);
+		glVertex3f(10, 0, 0.0);
+		glVertex3f(7, -7, 0.0);
+		glVertex3f(0, -10, 0.0);
+		// Finish drawing lines
+		glEnd();
+		// Enable lighting
+		glEnable(GL_LIGHTING);
+	}
 }
 
 /** Fire the rockets. */
@@ -102,5 +124,12 @@ bool Spaceship::CollisionTest(shared_ptr<GameObject> o)
 
 void Spaceship::OnCollision(const GameObjectList &objects)
 {
-	mWorld->FlagForRemoval(GetThisPtr());
+	if (mShieldOn == true)
+	{
+			mShieldOn = false;
+	}
+	else
+	{
+		mWorld->FlagForRemoval(GetThisPtr());
+	}
 }

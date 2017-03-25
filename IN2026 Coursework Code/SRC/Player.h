@@ -8,6 +8,7 @@
 #include "IPlayerListener.h"
 #include "IGameWorldListener.h"
 #include "PowerUp.h"
+#include "Sheild.h"
 
 class Player : public IGameWorldListener
 {

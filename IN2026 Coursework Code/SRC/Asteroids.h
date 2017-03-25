@@ -49,10 +49,13 @@ public:
 	// Override the default implementation of ITimerListener ////////////////////
 	void OnTimer(int value);
 
-private:
 	shared_ptr<Spaceship> mSpaceship;
 
+private:
+	//shared_ptr<Spaceship> mSpaceship;
+
 	shared_ptr<PowerUp> mPowerUp;
+	shared_ptr<Sheild> mSheild;
 	shared_ptr<GUILabel> mScoreLabel;
 	shared_ptr<GUILabel> mLivesLabel;
 	// Start Screen Label
@@ -68,6 +71,7 @@ private:
 	shared_ptr<GameObject> CreateSpaceship();
 	void CreateGUI();
 	void CreatePowerUp(const uint num_powerUp);
+	void CreateSheild();
 	void CreateAsteroids(const uint num_asteroids);
 	shared_ptr<GameObject> CreateExplosion();
 	
@@ -77,6 +81,7 @@ private:
 
 	const static uint SHOW_GAME_START = 3;
 	const static uint CREATE_POWERUP = 4;
+	const static uint CREATE_SHEILD = 5;
 	ScoreKeeper mScoreKeeper;
 	Player mPlayer;
 	bool mGameStarted;

@@ -12,6 +12,8 @@
 #include "GUILabel.h"
 #include "Explosion.h"
 #include "PowerUp.h"
+#include "Sheild.h"
+
 
 // PUBLIC INSTANCE CONSTRUCTORS ///////////////////////////////////////////////
 
@@ -68,6 +70,9 @@ void Asteroids::Start()
 
 	// Creates a PowerUp and adds it to the world
 	CreatePowerUp(1);
+
+	// Creates a Sheild and adds it to the world
+	CreateSheild();
 
 	//Create the GUI
 	CreateGUI();
@@ -189,9 +194,8 @@ void Asteroids::OnObjectRemoved(GameWorld* world, shared_ptr<GameObject> object)
 
 	if (object->GetType() == GameObjectType("PowerUp"))
 	{
+		// Add a life if the Object removed is the PowerUp
 		mPlayer.mLives ++;
-		cout << "You gained a life \n";
-
 		// Needed to get Lives Label to update
 		// Format the lives left message using an string-based stream
 		std::ostringstream msg_stream;
@@ -200,7 +204,16 @@ void Asteroids::OnObjectRemoved(GameWorld* world, shared_ptr<GameObject> object)
 		std::string lives_msg = msg_stream.str();
 		mLivesLabel->SetText(lives_msg);
 
-		SetTimer(3000, CREATE_POWERUP);
+		SetTimer(4000, CREATE_POWERUP);
+	}
+
+	if (object->GetType() == GameObjectType("Sheild"))
+	{
+		if (mSpaceship->mShieldOn == false)
+		{
+			mSpaceship->mShieldOn = true;
+		}
+		SetTimer(6000, CREATE_SHEILD);
 	}
 }
 
@@ -243,8 +256,13 @@ void Asteroids::OnTimer(int value)
 	// Adds another PowerUp to the game
 	if (value == CREATE_POWERUP)
 	{
-		//mPlayer.mLives--;
 		CreatePowerUp(1);
+	}
+
+	// Adds another Sheild to the game
+	if (value == CREATE_SHEILD)
+	{
+		CreateSheild();
 	}
 
 }
@@ -294,6 +312,13 @@ void Asteroids::CreatePowerUp(const uint num_powerUp)
 	mGameWorld->AddObject(mPowerUp);
 }
 
+void Asteroids::CreateSheild()
+{
+	mSheild = make_shared<Sheild>();
+	mSheild->SetBoundingShape(make_shared<BoundingSphere>(mSheild->GetThisPtr(), 10.0f));
+	mGameWorld->AddObject(mSheild);
+}
+
 void Asteroids::CreateGUI()
 {
 	// Add a (transparent) border around the edge of the game display
@@ -328,7 +353,7 @@ void Asteroids::CreateGUI()
 
 
 	//HighScore Label
-	mHighScoreLabel = make_shared<GUILabel>("Highest Score: ");
+	mHighScoreLabel = make_shared<GUILabel>("Last Score Was: ");
 
 	mHighScoreLabel->SetHorizontalAlignment(GUIComponent::GUI_HALIGN_CENTER);
 
