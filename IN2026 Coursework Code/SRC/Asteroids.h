@@ -12,6 +12,7 @@
 
 class GameObject;
 class Spaceship;
+class AiSpaceship;
 class GUILabel;
 class PowerUp;
 
@@ -53,9 +54,9 @@ public:
 
 private:
 	//shared_ptr<Spaceship> mSpaceship;
-
+	shared_ptr<AiSpaceship> mAiSpaceship;
 	shared_ptr<PowerUp> mPowerUp;
-	shared_ptr<Sheild> mSheild;
+	shared_ptr<Shield> mShield;
 	shared_ptr<GUILabel> mScoreLabel;
 	shared_ptr<GUILabel> mLivesLabel;
 	// Start Screen Label
@@ -69,9 +70,10 @@ private:
 
 	void ResetSpaceship();
 	shared_ptr<GameObject> CreateSpaceship();
+	shared_ptr<GameObject>CreateAiSpaceship();
 	void CreateGUI();
 	void CreatePowerUp(const uint num_powerUp);
-	void CreateSheild();
+	void CreateShield();
 	void CreateAsteroids(const uint num_asteroids);
 	shared_ptr<GameObject> CreateExplosion();
 	
@@ -81,7 +83,8 @@ private:
 
 	const static uint SHOW_GAME_START = 3;
 	const static uint CREATE_POWERUP = 4;
-	const static uint CREATE_SHEILD = 5;
+	const static uint CREATE_SHIELD = 5;
+	const static uint AI_SHOOT = 6;
 	ScoreKeeper mScoreKeeper;
 	Player mPlayer;
 	bool mGameStarted;

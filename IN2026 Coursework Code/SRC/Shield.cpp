@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include "GameUtil.h"
-#include "Sheild.h"
+#include "Shield.h"
 #include "BoundingShape.h"
 
-Sheild::Sheild(void) : GameObject("Sheild")
+Shield::Shield(void) : GameObject("Shield")
 {
 	mAngle = rand() % 360;
 	mRotation = rand() % 90;
@@ -16,11 +16,11 @@ Sheild::Sheild(void) : GameObject("Sheild")
 }
 
 
-Sheild::~Sheild(void)
+Shield::~Shield(void)
 {
 }
 
-void Sheild::Render(void)
+void Shield::Render(void)
 {
 	// Scales everything by SF 0.5
 	//glScalef(0.5, 0.5, 0.5);
@@ -44,15 +44,15 @@ void Sheild::Render(void)
 	glEnable(GL_LIGHTING);
 }
 
-bool Sheild::CollisionTest(shared_ptr<GameObject> o)
+bool Shield::CollisionTest(shared_ptr<GameObject> o)
 {
-	if (o->GetType() == GameObjectType("Asteroid") || o->GetType() == GameObjectType("Bullet") || o->GetType() == GameObjectType("PowerUp")) return false;
+	if (o->GetType() == GameObjectType("Asteroid") || o->GetType() == GameObjectType("Bullet") || o->GetType() == GameObjectType("PowerUp") || o->GetType() == GameObjectType("AiBullet")) return false;
 	if (mBoundingShape.get() == NULL) return false;
 	if (o->GetBoundingShape().get() == NULL) return false;
 	return mBoundingShape->CollisionTest(o->GetBoundingShape());
 }
 
-void Sheild::OnCollision(const GameObjectList& objects)
+void Shield::OnCollision(const GameObjectList& objects)
 {
 	mWorld->FlagForRemoval(GetThisPtr());
 }

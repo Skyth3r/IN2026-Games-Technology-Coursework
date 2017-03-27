@@ -3,11 +3,11 @@
 
 #include "GameObject.h"
 
-class Sheild : public GameObject
+class Shield : public GameObject
 {
 public:
-	Sheild(void);
-	~Sheild(void);
+	Shield(void);
+	~Shield(void);
 	void Render(void);
 
 	bool CollisionTest(shared_ptr<GameObject> o);

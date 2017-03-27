@@ -102,16 +102,20 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\SRC\AiBullet.cpp" />
+    <ClCompile Include="..\..\SRC\AiSpaceship.cpp" />
     <ClCompile Include="..\..\SRC\Asteroid.cpp" />
     <ClCompile Include="..\..\src\Asteroids.cpp" />
     <ClCompile Include="..\..\src\Bullet.cpp" />
     <ClCompile Include="..\..\SRC\Explosion.cpp" />
     <ClCompile Include="..\..\src\main.cpp" />
     <ClCompile Include="..\..\SRC\PowerUp.cpp" />
-    <ClCompile Include="..\..\SRC\Sheild.cpp" />
+    <ClCompile Include="..\..\SRC\Shield.cpp" />
     <ClCompile Include="..\..\src\Spaceship.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\SRC\AiBullet.h" />
+    <ClInclude Include="..\..\SRC\AiSpaceship.h" />
     <ClInclude Include="..\..\SRC\Asteroid.h" />
     <ClInclude Include="..\..\src\Asteroids.h" />
     <ClInclude Include="..\..\src\Bullet.h" />
@@ -121,7 +125,7 @@
     <ClInclude Include="..\..\SRC\Player.h" />
     <ClInclude Include="..\..\SRC\PowerUp.h" />
     <ClInclude Include="..\..\SRC\ScoreKeeper.h" />
-    <ClInclude Include="..\..\SRC\Sheild.h" />
+    <ClInclude Include="..\..\SRC\Shield.h" />
     <ClInclude Include="..\..\src\Spaceship.h" />
   </ItemGroup>
   <ItemGroup>

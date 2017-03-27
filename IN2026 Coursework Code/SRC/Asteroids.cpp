@@ -12,8 +12,8 @@
 #include "GUILabel.h"
 #include "Explosion.h"
 #include "PowerUp.h"
-#include "Sheild.h"
-
+#include "Shield.h"
+#include "AiSpaceship.h"
 
 // PUBLIC INSTANCE CONSTRUCTORS ///////////////////////////////////////////////
 
@@ -65,6 +65,9 @@ void Asteroids::Start()
 
 	// Create a spaceship and add it to the world
 	// mGameWorld->AddObject(CreateSpaceship());
+	// Create a ai spaceship and add it to the world
+	mGameWorld->AddObject(CreateAiSpaceship());
+	SetTimer(1000, AI_SHOOT);
 	// Create some asteroids and add them to the world
 	CreateAsteroids(6);
 
@@ -72,7 +75,7 @@ void Asteroids::Start()
 	CreatePowerUp(1);
 
 	// Creates a Sheild and adds it to the world
-	CreateSheild();
+	CreateShield();
 
 	//Create the GUI
 	CreateGUI();
@@ -115,6 +118,9 @@ void Asteroids::OnKeyPressed(uchar key, int x, int y)
 			mStartLabel->SetVisible(false);
 			mHighScoreLabel->SetVisible(false);
 			mHighScoreNumLabel->SetVisible(false);
+
+			mGameWorld->FlagForRemoval(mAiSpaceship);
+
 			break;
 		default:
 			break;
@@ -179,6 +185,18 @@ void Asteroids::OnSpecialKeyReleased(int key, int x, int y)
 
 void Asteroids::OnObjectRemoved(GameWorld* world, shared_ptr<GameObject> object)
 {
+	if (object->GetType() == GameObjectType("AiSpaceship"))
+	{
+		if (!mGameStarted)
+		{
+			shared_ptr<GameObject> explosion = CreateExplosion();
+			explosion->SetPosition(mAiSpaceship->GetPosition());
+			explosion->SetRotation(mAiSpaceship->GetRotation());
+			mGameWorld->AddObject(explosion);
+			mGameWorld->AddObject(CreateAiSpaceship());
+		}
+	}
+
 	if (object->GetType() == GameObjectType("Asteroid"))
 	{
 		shared_ptr<GameObject> explosion = CreateExplosion();
@@ -207,13 +225,20 @@ void Asteroids::OnObjectRemoved(GameWorld* world, shared_ptr<GameObject> object)
 		SetTimer(4000, CREATE_POWERUP);
 	}
 
-	if (object->GetType() == GameObjectType("Sheild"))
+	if (object->GetType() == GameObjectType("Shield"))
 	{
+		if (mAiSpaceship->mShieldOn == false)
+		{
+			mAiSpaceship->mShieldOn = true;
+		}
+		// SetTimer(6000, CREATE_SHIELD);
+
 		if (mSpaceship->mShieldOn == false)
 		{
 			mSpaceship->mShieldOn = true;
 		}
-		SetTimer(6000, CREATE_SHEILD);
+		SetTimer(6000, CREATE_SHIELD);
+
 	}
 }
 
@@ -221,6 +246,17 @@ void Asteroids::OnObjectRemoved(GameWorld* world, shared_ptr<GameObject> object)
 
 void Asteroids::OnTimer(int value)
 {
+	if (value == AI_SHOOT)
+	{
+		if (!mGameStarted)
+		{
+			mAiSpaceship->Thrust(rand() % 10 + (-2));
+			mAiSpaceship->Rotate(rand() % 120 + (-60));
+			mAiSpaceship->Shoot();
+			SetTimer(1000, AI_SHOOT);
+		}
+	}
+
 	if (value == CREATE_NEW_PLAYER)
 	{
 		mSpaceship->Reset();
@@ -260,9 +296,9 @@ void Asteroids::OnTimer(int value)
 	}
 
 	// Adds another Sheild to the game
-	if (value == CREATE_SHEILD)
+	if (value == CREATE_SHIELD)
 	{
-		CreateSheild();
+		CreateShield();
 	}
 
 }
@@ -305,6 +341,26 @@ void Asteroids::CreateAsteroids(const uint num_asteroids)
 	}
 }
 
+shared_ptr<GameObject> Asteroids::CreateAiSpaceship()
+{
+	// Create a raw pointer to a spaceship that can be converted to
+	// shared_ptrs of different types because GameWorld implements IRefCount
+	mAiSpaceship = make_shared<AiSpaceship>();
+	mAiSpaceship->SetBoundingShape(make_shared<BoundingSphere>(mAiSpaceship->GetThisPtr(), 4.0f));
+	shared_ptr<Shape> ai_bullet_shape = make_shared<Shape>("bullet.shape");
+	mAiSpaceship->SetAiBulletShape(ai_bullet_shape);
+	Animation *anim_ptr = AnimationManager::GetInstance().GetAnimationByName("spaceship");
+	shared_ptr<Sprite> spaceship_sprite =
+		make_shared<Sprite>(anim_ptr->GetWidth(), anim_ptr->GetHeight(), anim_ptr);
+	mAiSpaceship->SetSprite(spaceship_sprite);
+	mAiSpaceship->SetScale(0.1f);
+	// Reset spaceship back to centre of the world
+	mAiSpaceship->SetPosition(GLVector3f(0, 25, 0));
+	// Return the spaceship so it can be added to the world
+	return mAiSpaceship;
+
+}
+
 void Asteroids::CreatePowerUp(const uint num_powerUp)
 {
 	mPowerUp = make_shared<PowerUp>();
@@ -312,11 +368,11 @@ void Asteroids::CreatePowerUp(const uint num_powerUp)
 	mGameWorld->AddObject(mPowerUp);
 }
 
-void Asteroids::CreateSheild()
+void Asteroids::CreateShield()
 {
-	mSheild = make_shared<Sheild>();
-	mSheild->SetBoundingShape(make_shared<BoundingSphere>(mSheild->GetThisPtr(), 10.0f));
-	mGameWorld->AddObject(mSheild);
+	mShield = make_shared<Shield>();
+	mShield->SetBoundingShape(make_shared<BoundingSphere>(mShield->GetThisPtr(), 10.0f));
+	mGameWorld->AddObject(mShield);
 }
 
 void Asteroids::CreateGUI()
