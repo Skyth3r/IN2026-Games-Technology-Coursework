@@ -11,7 +11,7 @@ using namespace std;
 /**  Default constructor. */
 AiSpaceship::AiSpaceship(): GameObject("AiSpaceship"), mAiThrust(0)
 {
-	mShieldOn = true;
+	mAiShieldOn = true;
 }
 
 /** Construct a spaceship with given position, velocity, acceleration, angle, and rotation. */
@@ -60,7 +60,7 @@ void AiSpaceship::Render(void)
 	//glEnable(GL_LIGHTING);
 	GameObject::Render();
 
-	if (mShieldOn)
+	if (mAiShieldOn)
 	{
 		glScalef(7, 6, 8);
 		// Disable lighting for solid colour lines
@@ -132,13 +132,13 @@ bool AiSpaceship::CollisionTest(shared_ptr<GameObject> o)
 
 void AiSpaceship::OnCollision(const GameObjectList &objects)
 {
-	if (mShieldOn == true)
+	if (mAiShieldOn == true)
 	{
-			mShieldOn = false;
+			mAiShieldOn = false;
 	}
 	else
 	{
 		mWorld->FlagForRemoval(GetThisPtr());
-		mShieldOn = true;
+		mAiShieldOn = true;
 	}
 }

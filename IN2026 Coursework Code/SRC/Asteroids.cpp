@@ -67,7 +67,7 @@ void Asteroids::Start()
 	// mGameWorld->AddObject(CreateSpaceship());
 	// Create a ai spaceship and add it to the world
 	mGameWorld->AddObject(CreateAiSpaceship());
-	SetTimer(1000, AI_SHOOT);
+	SetTimer(500, AI_SHOOT);
 	// Create some asteroids and add them to the world
 	CreateAsteroids(6);
 
@@ -227,18 +227,20 @@ void Asteroids::OnObjectRemoved(GameWorld* world, shared_ptr<GameObject> object)
 
 	if (object->GetType() == GameObjectType("Shield"))
 	{
-		if (mAiSpaceship->mShieldOn == false)
+		if (mAiSpaceship->mAiShieldOn == false)
 		{
-			mAiSpaceship->mShieldOn = true;
+			mAiSpaceship->mAiShieldOn = true;
 		}
 		// SetTimer(6000, CREATE_SHIELD);
 
-		if (mSpaceship->mShieldOn == false)
-		{
-			mSpaceship->mShieldOn = true;
+		if (mSpaceship) {
+			if (mSpaceship->mShieldOn == false)
+			{
+				mSpaceship->mShieldOn = true;
+			}
 		}
+		
 		SetTimer(6000, CREATE_SHIELD);
-
 	}
 }
 
@@ -253,7 +255,7 @@ void Asteroids::OnTimer(int value)
 			mAiSpaceship->Thrust(rand() % 10 + (-2));
 			mAiSpaceship->Rotate(rand() % 120 + (-60));
 			mAiSpaceship->Shoot();
-			SetTimer(1000, AI_SHOOT);
+			SetTimer(500, AI_SHOOT);
 		}
 	}
 
