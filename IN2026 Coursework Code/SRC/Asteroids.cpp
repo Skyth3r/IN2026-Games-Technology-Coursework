@@ -231,13 +231,18 @@ void Asteroids::OnObjectRemoved(GameWorld* world, shared_ptr<GameObject> object)
 		{
 			mAiSpaceship->mAiShieldOn = true;
 		}
-		// SetTimer(6000, CREATE_SHIELD);
 
 		if (mSpaceship) {
 			if (mSpaceship->mShieldOn == false)
 			{
 				mSpaceship->mShieldOn = true;
 			}
+			else // Increase score by 50 if shield is active
+			{
+				mScoreKeeper.returnScore();
+			}
+
+			//50 bonus points if picking up a shield is already active
 		}
 		
 		SetTimer(6000, CREATE_SHIELD);
@@ -252,8 +257,8 @@ void Asteroids::OnTimer(int value)
 	{
 		if (!mGameStarted)
 		{
-			mAiSpaceship->Thrust(rand() % 10 + (-2));
-			mAiSpaceship->Rotate(rand() % 120 + (-60));
+			mAiSpaceship->Thrust(rand() % 10 + (2));
+			mAiSpaceship->Rotate(rand() % 120 + (-100));
 			mAiSpaceship->Shoot();
 			SetTimer(500, AI_SHOOT);
 		}

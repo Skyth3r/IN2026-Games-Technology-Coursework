@@ -17,9 +17,16 @@ public:
 	void OnWorldUpdated(GameWorld* world) {}
 	void OnObjectAdded(GameWorld* world, shared_ptr<GameObject> object) {}
 
+	// Used for Shield bonus points
+	void returnScore() {
+		mScore += 50;
+		FireScoreChanged();
+	}
+
 	void OnObjectRemoved(GameWorld* world, shared_ptr<GameObject> object)
 	{
-		if (object->GetType() == GameObjectType("Asteroid")) {
+		if (object->GetType() == GameObjectType("Asteroid")) 
+		{
  			mScore += 10;
 			FireScoreChanged();
 		}

@@ -55,8 +55,9 @@ void Spaceship::Render(void)
 	if (mShieldOn)
 	{
 		glScalef(7, 6, 8);
-		// Disable lighting for solid colour lines
-		glDisable(GL_LIGHTING);
+		// Eable lighting for solid colour lines
+		glEnable(GL_LIGHTING);
+		//glDisable(GL_LIGHTING);
 		// Start drawing lines
 		glBegin(GL_LINE_LOOP);
 		// Add vertices to draw an octagon
@@ -71,7 +72,7 @@ void Spaceship::Render(void)
 		// Finish drawing lines
 		glEnd();
 		// Enable lighting
-		glEnable(GL_LIGHTING);
+		//glEnable(GL_LIGHTING);
 	}
 }
 
