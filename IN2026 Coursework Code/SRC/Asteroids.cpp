@@ -72,7 +72,7 @@ void Asteroids::Start()
 	CreateAsteroids(6);
 
 	// Creates a PowerUp and adds it to the world
-	CreatePowerUp(1);
+	CreatePowerUp();
 
 	// Creates a Sheild and adds it to the world
 	CreateShield();
@@ -294,12 +294,15 @@ void Asteroids::OnTimer(int value)
 		mLevel = 0;
 		CreateGUI();
 		mGameStarted = false;
+		// Create a ai spaceship and add it to the world
+		mGameWorld->AddObject(CreateAiSpaceship());
+		SetTimer(500, AI_SHOOT);
 	}
 	
 	// Adds another PowerUp to the game
 	if (value == CREATE_POWERUP)
 	{
-		CreatePowerUp(1);
+		CreatePowerUp();
 	}
 
 	// Adds another Sheild to the game
@@ -368,7 +371,7 @@ shared_ptr<GameObject> Asteroids::CreateAiSpaceship()
 
 }
 
-void Asteroids::CreatePowerUp(const uint num_powerUp)
+void Asteroids::CreatePowerUp()
 {
 	mPowerUp = make_shared<PowerUp>();
 	mPowerUp->SetBoundingShape(make_shared<BoundingSphere>(mPowerUp->GetThisPtr(), 10.0f));

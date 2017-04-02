@@ -72,7 +72,7 @@ private:
 	shared_ptr<GameObject> CreateSpaceship();
 	shared_ptr<GameObject>CreateAiSpaceship();
 	void CreateGUI();
-	void CreatePowerUp(const uint num_powerUp);
+	void CreatePowerUp();
 	void CreateShield();
 	void CreateAsteroids(const uint num_asteroids);
 	shared_ptr<GameObject> CreateExplosion();
