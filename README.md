@@ -1,6 +1,6 @@
 # IN2026 Games Technology Coursework
 ## Task
-The main task of this coursework is to add new features to the pre-made Asteroids game.  The coursework is split into three parts, each which requires a feature to be implemented to the game. The coursework is written in C++ using Visual Studio. The Asteroids game without the following features implemented can be [found here] (https://www.github.com/Skyth3r/IN2026-Asteroids-Template)
+The main task of this coursework is to add new features to the pre-made Asteroids game.  The coursework is split into three parts, each which requires a feature to be implemented to the game. The coursework is written in C++ using Visual Studio. The Asteroids game without the following features implemented can be [found here](https://www.github.com/Skyth3r/IN2026-Asteroids-Template)
 
 ### Part 1
 Part 1 requires one of the following to be implemented:
